@@ -1,4 +1,4 @@
-export class createUserDTO{
+export class updateUserDTO{
     firstName:string;
     lastName:string;
     age:number;

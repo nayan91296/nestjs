@@ -8,6 +8,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MongooseConfigService } from './mongoose-config.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity'
+import { UserModule } from './user.module';
 
 
 const is_dev_mode = false;
@@ -27,6 +29,8 @@ const is_dev_mode = false;
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         synchronize: true,
+        logging:true,
+        entities: [User],
       }),
       inject: [ConfigService],
     }),
@@ -44,11 +48,12 @@ const is_dev_mode = false;
     // MongooseModule.forRootAsync({
     //   useClass:MongooseConfigService
     // })
+    UserModule
   ],
-  controllers: [UserController],
+  controllers: [],
   // providers: [AppService],
   providers: [
-    UserService,
+    // UserService,
     {provide:'DB_NAME', useValue:'Demo'},
     {provide:'MAIL',useValue:['nayan@gamil.com','test@gmail.com']},
     {

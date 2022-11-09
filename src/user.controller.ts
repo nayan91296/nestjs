@@ -1,8 +1,9 @@
-import { Inject, Controller, Get, Req, HttpCode, HttpStatus, Res, Header, Redirect, Param, Query, Headers, Body, Post, Put, Delete } from '@nestjs/common';
+import { Patch, Inject, Controller, Get, Req, HttpCode, HttpStatus, Res, Header, Redirect, Param, Query, Headers, Body, Post, Put, Delete } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Request, Response } from 'express';
 import { get } from 'http';
-import {createUserDTO} from './DTO';
+import {createUserDTO} from './DTO/create-user.dto';
+import {updateUserDTO} from './DTO/update-user.dto';
 import { Config  } from './config';
 import { Subject } from 'rxjs';
 import { UserService } from './users.service';
@@ -118,9 +119,10 @@ export class UserController {
 //   }
 
 
-  @Post('/create')
+  @Post('add')
   createUser(@Body() createUserDto: createUserDTO) {
-    return this.usersService.createUser(createUserDto);
+    console.log('here');
+    return this.usersService.create(createUserDto);
   }
 
   @Get('/get')
@@ -133,12 +135,12 @@ export class UserController {
     return this.usersService.findUser(id);
   }
 
-  @Put("update/:id")
-  updateUser(@Param("id") id: number, @Body() updateUserDto: createUserDTO) {
+  @Patch("update/:id")
+  updateUser(@Param("id") id: number, @Body() updateUserDto: updateUserDTO) {
     return this.usersService.updateUser(id, updateUserDto);
   }
 
-  @Delete(":id")
+  @Delete("delete/:id")
   deleteUser(@Param("id") id: number) {
     return this.usersService.deleteUser(id);
   }

@@ -1,54 +1,58 @@
 import { Injectable } from '@nestjs/common';
+import { User } from './entities/user.entity';
+import { createUserDTO } from './DTO/create-user.dto';
+import { updateUserDTO } from './DTO/update-user.dto';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { create } from 'domain';
 
-export interface User{
-  name:string;
-  age:number;
-  id:number;
-}
+
+// export interface User{
+//   firstName:string;
+//   lastName:string;
+//   age:string;
+//   id:number;
+// }
 
 @Injectable()
 export class UserService {
- private store = new Map<number, User>();
-
- createUser(user: User) {
-  this.store.set(user.id, user);
-
-  return { data:user, message: "USER ADDED" };
-}
-
-findUser(id: number) {
-  // const user_data = this.store.get(id);
-  // console.log('user',user_data);
-  // console.log('store',this.store);
-  // if (this.store.size == 0) {
-  //   return { message: "USER NOT FOUND" };
-  // }
-
-  // return { message: "User get", data: this.store[1] };
-
- return this.store.get(id);
+//  private store = new Map<number, User>();
+constructor(@InjectRepository(User) private readonly userRepository: Repository<any>){
 
 }
 
-findUsers() {
-  return Array.from(this.store).map(([_, user]) => user);
+ create(createUserDto: createUserDTO) :Promise<User>{
+  let user : User = new User();
+  user.firstName = createUserDto.firstName;
+  user.lastName = createUserDto.lastName;
+  user.age = createUserDto.age;
+  return this.userRepository.save(user);
+  // this.store.set(user.id, user);
+
+  // return { data:user, message: "USER ADDED" };
 }
 
-updateUser(id: number, user: User) {
-  const userD = this.store.get(id);
+findUser(id : number) {
+ 
+ return this.userRepository.findOne({where:{id:id}});
 
-  if (!userD) {
-    return { message: "USER NOT FOUND" };
-  }
+}
 
-  this.store.set(id, user);
+findUsers() :Promise<User[]>{
+  return this.userRepository.find();
+}
 
-  return { message: "USER UPDATED" };
+updateUser(id: number, updateUserDto: updateUserDTO) {
+  
+  let user : User = new User();
+  user.firstName = updateUserDto.firstName;
+  user.lastName = updateUserDto.lastName;
+  user.age = updateUserDto.age;
+  user.id = id;
+  return this.userRepository.update(id,user);
 }
 
 deleteUser(id: number) {
-  this.store.delete(id);
-
-  return { message: "USER DELETED" };
+  return this.userRepository.delete(id);
 }
 }
