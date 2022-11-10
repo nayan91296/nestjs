@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { UserController } from './user.controller';
 import { AppService } from './app.service';
@@ -8,7 +8,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MongooseConfigService } from './mongoose-config.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entities/user.entity'
+import { User } from './entities/user.entity';
+import { LoggerMiddleware } from './middleware/logger.middleware';
 
 
 const is_dev_mode = false;
@@ -21,4 +22,10 @@ const is_dev_mode = false;
     UserService
   ],
 })
-export class UserModule {}
+export class UserModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes('user/get');
+  }
+}

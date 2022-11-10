@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { UserController } from './user.controller';
 import { AppService } from './app.service';
@@ -10,6 +10,7 @@ import { MongooseConfigService } from './mongoose-config.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity'
 import { UserModule } from './user.module';
+import { LoggerMiddleware } from './middleware/logger.middleware';
 
 
 const is_dev_mode = false;

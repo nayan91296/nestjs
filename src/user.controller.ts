@@ -1,4 +1,4 @@
-import { Patch, Inject, Controller, Get, Req, HttpCode, HttpStatus, Res, Header, Redirect, Param, Query, Headers, Body, Post, Put, Delete } from '@nestjs/common';
+import { ValidationPipe, Patch, Inject, Controller, Get, Req, HttpCode, HttpStatus, Res, Header, Redirect, Param, Query, Headers, Body, Post, Put, Delete } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Request, Response } from 'express';
 import { get } from 'http';
@@ -7,6 +7,7 @@ import {updateUserDTO} from './DTO/update-user.dto';
 import { Config  } from './config';
 import { Subject } from 'rxjs';
 import { UserService } from './users.service';
+// import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
 
 class paramVariable{
     id:5;
@@ -119,14 +120,15 @@ export class UserController {
 //   }
 
 
-  @Post('add')
-  createUser(@Body() createUserDto: createUserDTO) {
-    console.log('here');
+  @Post('/add')
+  // @usePipes(ValidationPipe)
+  createUser(@Body(ValidationPipe) createUserDto: createUserDTO) {
     return this.usersService.create(createUserDto);
   }
 
   @Get('/get')
   findAllUsers() {
+    console.log('here');
     return this.usersService.findUsers();
   }
 
