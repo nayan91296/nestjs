@@ -17,9 +17,33 @@ import { create } from 'domain';
 
 @Injectable()
 export class UserService {
+
 //  private store = new Map<number, User>();
 constructor(@InjectRepository(User) private readonly userRepository: Repository<any>){
 
+}
+
+public users : User[] = [
+  {
+    firstName:'user1',
+    lastName:'demo',
+    age:25,
+    password:'user123',
+    email:'user1@gmail.com',
+    id:1
+  },
+  {
+    firstName:'user2',
+    lastName:'demo2',
+    age:25,
+    password:'user234',
+    email:'user2@gmail.com',
+    id:2
+  }
+];
+
+getUserByName(firstName:string) : User{
+  return this.users.find((user:User)=>user.firstName == firstName);
 }
 
  create(createUserDto: createUserDTO) :Promise<User>{
